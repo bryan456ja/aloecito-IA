@@ -1,16 +1,29 @@
 <!doctype html>
 <html lang="es">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+>
 
 <title>Aloecito IA | ALOE GLOW</title>
 
 <style>
 
-html,body{
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  width:100%;
   height:100%;
   margin:0;
+  padding:0;
 }
 
 body{
@@ -21,15 +34,17 @@ body{
 }
 
 .app{
-  max-width:1000px;
+  width:min(1000px,100%);
   height:92vh;
   min-height:0;
   margin:4vh auto;
   background:white;
   border-radius:22px;
   overflow:hidden;
+
   display:grid;
-  grid-template-columns:280px 1fr;
+  grid-template-columns:280px minmax(0,1fr);
+
   box-shadow:0 12px 40px #0002;
 }
 
@@ -37,6 +52,7 @@ aside{
   background:#2f7d32;
   color:white;
   padding:22px;
+  overflow-y:auto;
 }
 
 h1{
@@ -62,44 +78,66 @@ h1{
   width:100%;
   margin:6px 0;
   padding:11px;
+
   border:1px solid #ffffff55;
   border-radius:12px;
+
   background:#ffffff18;
   color:white;
+
   text-align:left;
   cursor:pointer;
+
+  font-size:14px;
 }
 
 main{
-  display:flex;
-  flex-direction:column;
+  min-width:0;
   min-height:0;
   height:100%;
+
+  display:flex;
+  flex-direction:column;
 }
 
 .top{
+  flex:0 0 auto;
+
   padding:18px;
+
   border-bottom:1px solid #dbe7d2;
+
   font-weight:bold;
-  flex-shrink:0;
+  font-size:18px;
 }
 
 .chat{
-  flex:1;
+  flex:1 1 auto;
+
+  min-width:0;
   min-height:0;
+
   overflow-y:auto;
   overflow-x:hidden;
+
   padding:22px;
+
   background:#fbfdf9;
+
   -webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
+
   scroll-behavior:smooth;
 }
 
 .msg{
   display:flex;
+  align-items:flex-end;
   gap:8px;
+
   margin:12px 0;
+
+  width:100%;
 }
 
 .user{
@@ -108,11 +146,16 @@ main{
 
 .bubble{
   max-width:75%;
+
   padding:13px 15px;
+
   border-radius:17px;
+
   line-height:1.45;
   font-size:14px;
+
   overflow-wrap:anywhere;
+  word-break:break-word;
 }
 
 .bot .bubble{
@@ -128,72 +171,128 @@ main{
 .mini{
   width:34px;
   height:34px;
+
   border-radius:50%;
+
   object-fit:cover;
-  align-self:end;
-  flex-shrink:0;
+
+  flex:0 0 34px;
 }
 
 .quick{
+  flex:0 0 auto;
+
   padding:10px 18px;
+
   border-top:1px solid #dbe7d2;
+
   display:flex;
   gap:7px;
+
   flex-wrap:wrap;
-  flex-shrink:0;
+
   background:white;
 }
 
 .quick button{
   border:1px solid #cfe0c8;
+
   background:white;
+
   border-radius:18px;
-  padding:8px;
+
+  padding:8px 12px;
+
   color:#285c2b;
+
   cursor:pointer;
-}
 
-.input{
-  display:flex;
-  gap:8px;
-  padding:15px 18px;
-  border-top:1px solid #dbe7d2;
-  flex-shrink:0;
-  background:white;
-}
-
-input{
-  flex:1;
-  min-width:0;
-  padding:13px;
-  border:1px solid #cbdcc5;
-  border-radius:14px;
   font-size:14px;
 }
 
-button.send{
-  background:#2f7d32;
-  color:white;
-  border:0;
+.input{
+  flex:0 0 auto;
+
+  display:flex;
+  gap:8px;
+
+  padding:15px 18px;
+
+  border-top:1px solid #dbe7d2;
+
+  background:white;
+
+  padding-bottom:
+    calc(15px + env(safe-area-inset-bottom));
+}
+
+input{
+  flex:1 1 auto;
+
+  min-width:0;
+
+  padding:13px;
+
+  border:1px solid #cbdcc5;
+
   border-radius:14px;
+
+  font-size:16px;
+
+  outline:none;
+
+  background:white;
+}
+
+input:focus{
+  border-color:#2f7d32;
+}
+
+button.send{
+  flex:0 0 auto;
+
+  background:#2f7d32;
+
+  color:white;
+
+  border:0;
+
+  border-radius:14px;
+
   padding:0 18px;
+
   font-weight:bold;
+
   cursor:pointer;
+
+  font-size:14px;
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
 }
 
 @media(max-width:700px){
 
   body{
+    background:white;
     overflow:hidden;
   }
 
   .app{
-    grid-template-columns:1fr;
     width:100%;
     height:100dvh;
     min-height:0;
+
     margin:0;
+
     border-radius:0;
+
+    display:grid;
+
+    grid-template-columns:1fr;
+    grid-template-rows:1fr;
   }
 
   aside{
@@ -201,36 +300,70 @@ button.send{
   }
 
   main{
-    min-height:0;
+    width:100%;
     height:100%;
+    min-width:0;
+    min-height:0;
+  }
+
+  .top{
+    padding:
+      calc(14px + env(safe-area-inset-top))
+      16px
+      14px;
   }
 
   .chat{
     min-height:0;
     overflow-y:auto;
     overflow-x:hidden;
+
+    padding:16px;
+
     -webkit-overflow-scrolling:touch;
   }
 
   .bubble{
-    max-width:82%;
+    max-width:84%;
+    font-size:15px;
+  }
+
+  .quick{
+    padding:9px 12px;
+
+    overflow-x:auto;
+    flex-wrap:nowrap;
+
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .quick button{
+    flex:0 0 auto;
+    white-space:nowrap;
   }
 
   .input{
-    padding:12px;
+    padding:
+      10px
+      12px
+      calc(10px + env(safe-area-inset-bottom));
   }
 
   input{
+    font-size:16px;
     min-width:0;
   }
 
   button.send{
-    padding:0 15px;
+    padding:0 16px;
   }
+
 }
 
 </style>
+
 </head>
+
 
 <body>
 
@@ -294,14 +427,22 @@ button.send{
   <main>
 
     <div class="top">
+
       💚 Habla con Aloecito
-      <span style="float:right;color:#55915a">
+
+      <span
+        style="float:right;color:#55915a"
+      >
         ● En línea
       </span>
+
     </div>
 
 
-    <div id="chat" class="chat"></div>
+    <div
+      id="chat"
+      class="chat"
+    ></div>
 
 
     <div class="quick">
@@ -337,11 +478,15 @@ button.send{
 
       <input
         id="i"
+        type="text"
+        autocomplete="off"
+        autocorrect="on"
         placeholder="Escribe tu pregunta..."
         onkeydown="if(event.key==='Enter')send()"
       >
 
       <button
+        id="sendButton"
         class="send"
         onclick="send()"
       >
@@ -357,42 +502,16 @@ button.send{
 
 <script>
 
-const chat = document.getElementById('chat');
+const chat = document.getElementById("chat");
+
+const input = document.getElementById("i");
+
+const sendButton = document.getElementById("sendButton");
 
 let messages = [];
 
 
-function add(text,user){
-
-  const r = document.createElement('div');
-
-  r.className = 'msg ' + (user ? 'user' : 'bot');
-
-
-  if(!user){
-
-    const im = document.createElement('img');
-
-    im.src = 'aloecito.png';
-
-    im.className = 'mini';
-
-    r.append(im);
-
-  }
-
-
-  const b = document.createElement('div');
-
-  b.className = 'bubble';
-
-  b.innerHTML = String(text).replace(/\n/g,'<br>');
-
-
-  r.append(b);
-
-  chat.append(r);
-
+function scrollToBottom(){
 
   requestAnimationFrame(() => {
 
@@ -403,73 +522,195 @@ function add(text,user){
 }
 
 
+function add(text,user){
+
+  const row = document.createElement("div");
+
+  row.className =
+    "msg " + (user ? "user" : "bot");
+
+
+  if(!user){
+
+    const image =
+      document.createElement("img");
+
+    image.src = "aloecito.png";
+
+    image.className = "mini";
+
+    image.alt = "Aloecito";
+
+    row.appendChild(image);
+
+  }
+
+
+  const bubble =
+    document.createElement("div");
+
+  bubble.className = "bubble";
+
+
+  if(user){
+
+    bubble.textContent = String(text);
+
+  }else{
+
+    bubble.innerHTML =
+      String(text)
+        .replace(/\n/g,"<br>");
+
+  }
+
+
+  row.appendChild(bubble);
+
+  chat.appendChild(row);
+
+  scrollToBottom();
+
+}
+
+
+function showThinking(){
+
+  const row =
+    document.createElement("div");
+
+  row.id = "thinking";
+
+  row.className = "msg bot";
+
+
+  const image =
+    document.createElement("img");
+
+  image.src = "aloecito.png";
+
+  image.className = "mini";
+
+  image.alt = "Aloecito";
+
+
+  const bubble =
+    document.createElement("div");
+
+  bubble.className = "bubble";
+
+  bubble.textContent =
+    "🌿 Pensando...";
+
+
+  row.appendChild(image);
+
+  row.appendChild(bubble);
+
+  chat.appendChild(row);
+
+  scrollToBottom();
+
+}
+
+
+function removeThinking(){
+
+  const thinking =
+    document.getElementById("thinking");
+
+  if(thinking){
+
+    thinking.remove();
+
+  }
+
+}
+
+
 async function send(){
 
-  const e = document.getElementById('i');
+  const text =
+    input.value.trim();
 
-  const text = e.value.trim();
 
+  if(!text){
 
-  if(!text) return;
+    input.focus();
+
+    return;
+
+  }
 
 
   add(text,true);
 
+
   messages.push({
-    role:'user',
+
+    role:"user",
+
     content:text
-  });
-
-
-  e.value = '';
-
-
-  const thinking = document.createElement('div');
-
-  thinking.className = 'msg bot';
-
-  thinking.innerHTML =
-    '<img class="mini" src="aloecito.png">' +
-    '<div class="bubble">🌿 Pensando...</div>';
-
-
-  chat.append(thinking);
-
-
-  requestAnimationFrame(() => {
-
-    chat.scrollTop = chat.scrollHeight;
 
   });
+
+
+  input.value = "";
+
+  input.disabled = true;
+
+  sendButton.disabled = true;
+
+  sendButton.textContent = "...";
+
+
+  showThinking();
 
 
   try{
 
-    const r = await fetch('/api/chat',{
+    const response =
+      await fetch(
+        "/api/chat",
+        {
+          method:"POST",
 
-      method:'POST',
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
 
-      headers:{
-        'Content-Type':'application/json'
-      },
-
-      body:JSON.stringify({
-        messages
-      })
-
-    });
-
-
-    const data = await r.json();
-
-
-    thinking.remove();
+          body:JSON.stringify({
+            messages:messages
+          })
+        }
+      );
 
 
-    if(!r.ok){
+    const data =
+      await response.json();
+
+
+    removeThinking();
+
+
+    if(!response.ok){
 
       throw new Error(
-        data.error || 'Error'
+        data.error ||
+        "El servidor devolvió un error."
+      );
+
+    }
+
+
+    if(
+      !data.text ||
+      typeof data.text !== "string"
+    ){
+
+      throw new Error(
+        "La IA no devolvió una respuesta válida."
       );
 
     }
@@ -479,26 +720,47 @@ async function send(){
 
 
     messages.push({
-      role:'assistant',
+
+      role:"assistant",
+
       content:data.text
+
     });
 
 
-}catch(err){
+  }catch(error){
 
-    thinking.remove();
+    removeThinking();
+
 
     add(
-      '🌿 Error: ' + (err.message || 'No se pudo obtener una respuesta.'),
+      "🌿 No pude responder en este momento.\n\n" +
+      "Detalle: " +
+      (error.message ||
+      "Error desconocido."),
       false
     );
+
+  }finally{
+
+    input.disabled = false;
+
+    sendButton.disabled = false;
+
+    sendButton.textContent = "Enviar";
+
+    input.focus();
+
+  }
 
 }
 
 
-function quick(t){
+function quick(text){
 
-  document.getElementById('i').value = t;
+  input.value = text;
+
+  input.focus();
 
   send();
 
@@ -506,10 +768,11 @@ function quick(t){
 
 
 const welcome =
-  '¡Hola! 🌿 Soy <b>Aloecito</b>, la IA de ALOE GLOW. ' +
-  'Puedo conversar contigo y ayudarte con el cuidado general de la ' +
-  '<b>piel, el cabello y las manos</b>, además de explicarte cómo ' +
-  'encaja la sábila en nuestros productos. ¿Qué quieres consultar?';
+  "¡Hola! 🌿 Soy <b>Aloecito</b>, la IA de ALOE GLOW. " +
+  "Puedo conversar contigo y ayudarte con el cuidado general " +
+  "de la <b>piel, el cabello y las manos</b>, además de explicarte " +
+  "cómo encaja la sábila en nuestros productos. " +
+  "¿Qué quieres consultar?";
 
 
 add(welcome,false);
@@ -517,4 +780,5 @@ add(welcome,false);
 </script>
 
 </body>
+
 </html>
