@@ -12,27 +12,28 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { messages } = req.body || {};
+    const body = req.body || {};
+    const messages = Array.isArray(body.messages) ? body.messages : [];
 
-    if (!Array.isArray(messages) || messages.length === 0) {
+    if (messages.length === 0) {
       return res.status(400).json({
-        error: "No se recibió ningún mensaje",
+        error: "No se recibió ningún mensaje.",
       });
     }
 
     const lastUserMessage = [...messages]
       .reverse()
       .find(
-        (m) =>
-          m &&
-          m.role === "user" &&
-          typeof m.content === "string" &&
-          m.content.trim()
+        (item) =>
+          item &&
+          item.role === "user" &&
+          typeof item.content === "string" &&
+          item.content.trim().length > 0
       );
 
     if (!lastUserMessage) {
       return res.status(400).json({
-        error: "No se encontró el mensaje del usuario",
+        error: "No se encontró un mensaje válido del usuario.",
       });
     }
 
@@ -42,54 +43,80 @@ export default async function handler(req, res) {
       instructions: `
 Eres ALOECITO, el asistente virtual de ALOE GLOW.
 
-Tu personalidad:
-- Amable, juvenil y natural.
-- Hablas en español claro y sencillo.
-- Respondes de manera breve, útil y fácil de entender.
-- Ayudas con preguntas sobre cuidado general de la piel,
-  cabello y manos.
-- Explicas de manera sencilla los usos cosméticos de la sábila.
+PERSONALIDAD:
+- Eres amable, juvenil, natural y cercano.
+- Hablas siempre en español claro.
+- Respondes de forma sencilla y útil.
+- Puedes mantener una conversación normal.
+- No repitas innecesariamente la misma información.
 
-Productos de ALOE GLOW:
+TU FUNCIÓN:
+Ayudas al usuario con preguntas generales sobre:
+- cuidado de la piel
+- cuidado del cabello
+- cuidado de las manos
+- sábila o aloe vera
+- productos de ALOE GLOW
 
-1. JABÓN DE SÁBILA
-Ayuda con la limpieza de la piel y proporciona una
-sensación de frescura.
+PRODUCTOS DE ALOE GLOW:
 
-2. SHAMPOO DE SÁBILA
+JABÓN DE SÁBILA:
+Producto para la limpieza de la piel y sensación de frescura.
+
+SHAMPOO DE SÁBILA:
 Producto para el cuidado general del cabello.
 
-3. CREMA DE MANOS
+CREMA DE MANOS:
 Ayuda a mantener las manos suaves e hidratadas.
 
-IMPORTANTE:
+REGLAS:
 - No diagnostiques enfermedades.
 - No prometas curas.
 - No prometas resultados médicos.
 - No inventes ingredientes.
-- Si una persona tiene un problema grave o persistente,
-  recomienda consultar con un profesional de salud.
-- No exageres los beneficios de los productos.
-- No inventes información sobre ALOE GLOW.
+- No inventes precios.
+- No inventes características de los productos.
+- Si una persona presenta un problema grave o persistente,
+  recomienda consultar a un profesional de salud.
+- Puedes explicar los usos cosméticos generales de la sábila,
+  sin presentarlos como tratamientos médicos.
+- No hagas publicidad exagerada.
+- Si el usuario solo quiere conversar, conversa normalmente.
 
-Tu objetivo es ayudar al usuario de forma natural y
-presentar ALOE GLOW sin parecer una publicidad exagerada.
+IMPORTANTE:
+Eres ALOECITO, la IA de ALOE GLOW.
+Tu objetivo es ayudar al usuario de manera natural,
+clara y agradable.
 `,
 
       input: lastUserMessage.content,
     });
 
+    const answer =
+      typeof response.output_text === "string"
+        ? response.output_text.trim()
+        : "";
+
+    if (!answer) {
+      return res.status(500).json({
+        error: "La inteligencia artificial no devolvió una respuesta.",
+      });
+    }
+
     return res.status(200).json({
-      text: response.output_text,
+      text: answer,
     });
 
   } catch (error) {
     console.error("ERROR ALOECITO:", error);
 
+    const message =
+      error && typeof error.message === "string"
+        ? error.message
+        : "Error desconocido al comunicarse con la inteligencia artificial.";
+
     return res.status(500).json({
-      error:
-        error?.message ||
-        "Ocurrió un error al conectar con la inteligencia artificial.",
+      error: message,
     });
   }
 }
