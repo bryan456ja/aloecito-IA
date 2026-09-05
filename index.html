@@ -484,17 +484,14 @@ async function send(){
     });
 
 
-  }catch(err){
+}catch(err){
 
     thinking.remove();
 
-
     add(
-      '🌿 No pude conectarme en este momento. Revisa que el servidor esté encendido y que la API esté configurada.',
+      '🌿 Error: ' + (err.message || 'No se pudo obtener una respuesta.'),
       false
     );
-
-  }
 
 }
 
