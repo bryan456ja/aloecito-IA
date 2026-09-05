@@ -12,9 +12,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body || {};
+    const { messages } = req.body || {};
 
-    if (!message || !message.trim()) {
+    if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({
         error: "No se recibió ningún mensaje",
       });
@@ -49,12 +49,13 @@ IMPORTANTE:
 Tu objetivo es ayudar al usuario y presentar ALOE GLOW
 de manera natural, sin parecer una publicidad exagerada.
       `,
-      input: message,
+      input: messages,
     });
 
     return res.status(200).json({
-      reply: response.output_text,
+      text: response.output_text,
     });
+
   } catch (error) {
     console.error(error);
 
