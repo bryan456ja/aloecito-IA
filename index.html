@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aloecito IA | ALOE GLOW</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#eef7e9;color:#183d1b}.app{max-width:1000px;height:92vh;margin:4vh auto;background:white;border-radius:22px;overflow:hidden;display:grid;grid-template-columns:280px 1fr;box-shadow:0 12px 40px #0002}aside{background:#2f7d32;color:white;padding:22px}h1{margin:0;font-size:23px}.tag{font-size:12px;opacity:.85}.avatar{width:150px;height:150px;object-fit:cover;border-radius:25px;display:block;margin:25px auto}.chip{width:100%;margin:6px 0;padding:11px;border:1px solid #ffffff55;border-radius:12px;background:#ffffff18;color:white;text-align:left;cursor:pointer}main{display:flex;flex-direction:column}.top{padding:18px;border-bottom:1px solid #dbe7d2;font-weight:bold}.chat{flex:1;overflow:auto;padding:22px;background:#fbfdf9}.msg{display:flex;gap:8px;margin:12px 0}.user{justify-content:flex-end}.bubble{max-width:75%;padding:13px 15px;border-radius:17px;line-height:1.45;font-size:14px}.bot .bubble{background:#edf6e8;border:1px solid #dcebd5}.user .bubble{background:#2f7d32;color:white}.mini{width:34px;height:34px;border-radius:50%;object-fit:cover;align-self:end}.quick{padding:10px 18px;border-top:1px solid #dbe7d2;display:flex;gap:7px;flex-wrap:wrap}.quick button{border:1px solid #cfe0c8;background:white;border-radius:18px;padding:8px;color:#285c2b;cursor:pointer}.input{display:flex;gap:8px;padding:15px 18px;border-top:1px solid #dbe7d2}input{flex:1;padding:13px;border:1px solid #cbdcc5;border-radius:14px;font-size:14px}button.send{background:#2f7d32;color:white;border:0;border-radius:14px;padding:0 18px;font-weight:bold}@media(max-width:700px){.app{grid-template-columns:1fr;height:100vh;margin:0;border-radius:0}aside{display:none}}
+</style></head>
+<body><div class="app"><aside><h1>🌿 ALOE GLOW</h1><div class="tag">Belleza natural, resultados reales.</div>
+<img class="avatar" src="aloecito.png" alt="Aloecito">
+<b>🤖 ALOECITO IA</b><p>Tu ayudante para piel, cabello y manos.</p>
+<button class="chip" onclick="quick('Quiero cuidar mi piel')">🧴 Cuidado de la piel</button>
+<button class="chip" onclick="quick('Quiero cuidar mi cabello')">🧖 Cuidado del cabello</button>
+<button class="chip" onclick="quick('Quiero cuidar mis manos')">🤲 Cuidado de manos</button>
+<button class="chip" onclick="quick('¿Qué productos tiene ALOE GLOW?')">🛍️ Productos</button>
+<small>Orientación general. No diagnostica ni reemplaza a un profesional de salud.</small></aside>
+<main><div class="top">💚 Habla con Aloecito <span style="float:right;color:#55915a">● En línea</span></div>
+<div id="chat" class="chat"></div>
+<div class="quick"><button onclick="quick('Beneficios de la sábila para la piel')">Piel</button><button onclick="quick('Beneficios de la sábila para el cabello')">Cabello</button><button onclick="quick('¿Cómo cuido mis manos?')">Manos</button><button onclick="quick('Háblame de los productos')">Productos</button></div>
+<div class="input"><input id="i" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter')send()"><button class="send" onclick="send()">Enviar</button></div></main></div>
+<script>
+const chat=document.getElementById('chat');
+let messages=[];
+
+function add(text,user){
+  const r=document.createElement('div');
+  r.className='msg '+(user?'user':'bot');
+  if(!user){
+    const im=document.createElement('img');
+    im.src='aloecito.png'; im.className='mini'; r.append(im);
+  }
+  const b=document.createElement('div');
+  b.className='bubble';
+  b.innerHTML=String(text).replace(/\n/g,'<br>');
+  r.append(b); chat.append(r); chat.scrollTop=chat.scrollHeight;
+}
+
+async function send(){
+  const e=document.getElementById('i');
+  const text=e.value.trim();
+  if(!text) return;
+  add(text,true);
+  messages.push({role:'user',content:text});
+  e.value='';
+
+  const thinking=document.createElement('div');
+  thinking.className='msg bot';
+  thinking.innerHTML='<img class="mini" src="aloecito.png"><div class="bubble">🌿 Pensando...</div>';
+  chat.append(thinking); chat.scrollTop=chat.scrollHeight;
+
+  try{
+    const r=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages})
+    });
+    const data=await r.json();
+    thinking.remove();
+    if(!r.ok) throw new Error(data.error||'Error');
+    add(data.text,false);
+    messages.push({role:'assistant',content:data.text});
+  }catch(err){
+    thinking.remove();
+    add('🌿 No pude conectarme en este momento. Revisa que el servidor esté encendido y que la API esté configurada.',false);
+  }
+}
+
+function quick(t){
+  document.getElementById('i').value=t;
+  send();
+}
+
+const welcome='¡Hola! 🌿 Soy <b>Aloecito</b>, la IA de ALOE GLOW. Puedo conversar contigo y ayudarte con el cuidado general de la <b>piel, el cabello y las manos</b>, además de explicarte cómo encaja la sábila en nuestros productos. ¿Qué quieres consultar?';
+add(welcome,false);
+</script></body></html>
